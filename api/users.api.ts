@@ -1,41 +1,55 @@
+// api/users.api.ts
 import { BaseAPI } from "./base.api";
 
-export interface User{
-    id:string,
-    email:string,
-    name:string,
-    role: 'admin'|'customer',
-    createdAt: string
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  createdAt: string;
 }
 
-export class UserAPI extends BaseAPI{
-    async create(payload:Omit<User,'id'|'createdAt'>,token:string):Promise<User>{
-        return this.post<User>('/users',payload,token);
-    }
+export class UserAPI extends BaseAPI {
 
-    async getbyId(id:string,token:string){
-        return this.get<User>('/users',token)
-    }
+  async create(
+    payload: Omit<User, "id" | "createdAt">,
+    token: string
+  ): Promise<User> {
+    // POST /users/register — no trailing 's' on register
+    const body = await this.post<{ data: User }>(
+      "/users/register",
+      payload,
+      token
+    );
+    return body.data;
+  }
 
-    async getAll(token:string){
-        return this.get<User>('/user',token);
-    }
+  async getById( token: string): Promise<User> {
+    const body = await this.get<{ data: User }>(`/users/profile`, token);
+    return body.data;
+  }
 
-    async update(id:string,payload: Partial<User>,token:string):Promise<User>{
-        const res = await this.request.patch(`${this.baseURL}/users/${id}`,{
-            data:'payload',
-            headers:{
-                Authorization: `Bearer ${token}`;
-            }
-        })
-    if(!res.ok()){
-        throw new Error(`Error :${res.status()} `)
-    }
-    return res.json();
-    }
-    
-    async delete(id:string,token:string):Promise<void>{
-        return super.delete(`${this.baseURL}/users/${id}`,token)
-    } 
+  async getAll(token: string): Promise<User[]> {
+    const body = await this.get<{ data: User[] }>("/users", token);
+    return body.data;
+  }
 
+  async update(
+    id: string,
+    payload: Partial<User>,
+    token: string
+  ): Promise<User> {
+    // Moved to base.api patch() — was passing string literal 'payload' before
+    const body = await this.patch<{ data: User }>(
+      `/users/${id}`,
+      payload,  // was the string "payload" — now the actual variable
+      token
+    );
+    return body.data;
+  }
+
+  async deleteMe(token: string): Promise<void> {
+    // This API deletes by token identity — endpoint is /users/me, no ID
+    return super.delete("/users/me", token);
+  }
 }

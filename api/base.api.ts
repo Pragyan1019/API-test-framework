@@ -1,38 +1,66 @@
+// api/base.api.ts
 import { APIRequestContext } from "@playwright/test";
 
 export class BaseAPI {
-    constructor(
-        protected request: APIRequestContext,
-        protected baseURL: string
-    ){}
+  constructor(
+    protected request: APIRequestContext,
+    protected baseURL: string,
+  ) {}
 
-    async get<T>(path:string,token?:string):Promise<T>{
-        const res = await this.request.get(`${this.baseURL}${path}`,{
-            headers: token ?{Authorization: `Bearer ${token}`}:{}
-        })
-        if(!res.ok()){
-            throw new Error(`failed ${res.status()}`);
-        }
-        return res.json();
-    }
+  // Single helper — all auth in this API uses x-auth-token
+ private authHeader(token?: string): Record<string, string> {
+    return token ? { "x-auth-token": token } : {};
+  }
 
-    async post<T>(path:string,body:unknown,token:string):Promise<T>{
-        const res = await this.request.post(`${this.baseURL}${path}`,{
-            data:body,
-            headers:{
-                'Content-type':'application/json',
-                ...(token ?{Authorization: `Bearer ${token}`}:{})
-            }
-        })
-        if(!res.ok()){
-            throw new Error(`Failed ${res.status()}`);
-        }
-        return res.json();
-    }
+  async get<T>(path: string, token?: string): Promise<T> {
+    const res = await this.request.get(`https://practice.expandtesting.com/notes/api/users/profile`, {
+      headers: {
+          "accept": "application/json",
+          ...this.authHeader(token),
+        },
+    });
+    if (!res.ok()) throw new Error(`GET ${path} failed [${res.status()}]`);
+    return res.json();
+  }
 
-    async delete(path:string,token?:string){
-        await this.request.delete(`${this.baseURL}${path}`,{
-            headers: token ?{Authorization:`Bearer ${token}`}:{}
-        })
+  async post<T>(path: string, body: unknown, token?: string): Promise<T> {
+    const res = await this.request.post(`${this.baseURL}${path}`, {
+      data: body,
+      headers: {
+        "Content-Type": "application/json",
+        ...this.authHeader(token),
+      },
+    });
+    if (!res.ok()) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(
+        `POST ${path} failed [${res.status()}]: ${JSON.stringify(err)}`,
+      );
     }
+    return res.json();
+  }
+
+  async patch<T>(path: string, body: unknown, token: string): Promise<T> {
+    const res = await this.request.patch(`${this.baseURL}${path}`, {
+      data: body,
+      headers: {
+        "Content-Type": "application/json",
+        ...this.authHeader(token),
+      },
+    });
+    if (!res.ok()) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(
+        `PATCH ${path} failed [${res.status()}]: ${JSON.stringify(err)}`,
+      );
+    }
+    return res.json();
+  }
+
+  async delete(path: string, token?: string): Promise<void> {
+    const res = await this.request.delete(`${this.baseURL}${path}`, {
+      headers: this.authHeader(token),
+    });
+    if (!res.ok()) throw new Error(`DELETE ${path} failed [${res.status()}]`);
+  }
 }

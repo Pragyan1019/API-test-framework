@@ -3,7 +3,7 @@ import { BaseAPI } from "./base.api";
 export interface Order {
   id: string;
   userId: string;
-  items: { productId: string; qty: string }[];
+  items: { productId: string; qty: number }[];
   status: "pending" | "confirmed" | "shipped" | "delivered";
   total: number;
 }
