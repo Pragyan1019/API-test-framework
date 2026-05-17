@@ -16,3 +16,15 @@ export const  testData = {
         }
     }
 }
+
+import authData from "./data/auth.data.json"
+
+export interface UserPayload{
+    scenario:string,
+    name:string,
+    email:string,
+    password:string,
+    expectedError?:string
+}
+
+export const Auth_Data = authData.createUser;

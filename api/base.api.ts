@@ -1,5 +1,6 @@
 // api/base.api.ts
 import { APIRequestContext } from "@playwright/test";
+import { User } from "./users.api";
 
 export class BaseAPI {
   constructor(
@@ -22,14 +23,17 @@ export class BaseAPI {
     if (!res.ok()) throw new Error(`GET ${path} failed [${res.status()}]`);
     return res.json();
   }
+  
 
-  async post<T>(path: string, body: unknown, token?: string): Promise<T> {
-    const res = await this.request.post(`${this.baseURL}${path}`, {
-      data: body,
+  async post<T>(path: string,body:Record<string,string> , token?: string): Promise<T> {
+    const res = await this.request.post(`https://practice.expandtesting.com/notes/api/users/register`, {
       headers: {
-        "Content-Type": "application/json",
-        ...this.authHeader(token),
+        "Content-Type": "application/x-www-form-urlencoded",
+        "accept": "application/json",
       },
+      form: 
+        body
+      ,
     });
     if (!res.ok()) {
       const err = await res.json().catch(() => ({}));

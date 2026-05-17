@@ -4,8 +4,8 @@ import { BaseAPI } from "./base.api";
 export interface User {
   id: string;
   name: string;
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
   createdAt: string;
 }
 
@@ -13,13 +13,12 @@ export class UserAPI extends BaseAPI {
 
   async create(
     payload: Omit<User, "id" | "createdAt">,
-    token: string
+    token?: string
   ): Promise<User> {
     // POST /users/register — no trailing 's' on register
     const body = await this.post<{ data: User }>(
       "/users/register",
-      payload,
-      token
+      payload as Record<string,string>,
     );
     return body.data;
   }

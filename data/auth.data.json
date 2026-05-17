@@ -1,0 +1,49 @@
+{
+  "createUser": {
+    "valid": [
+      {
+        "scenario": "valid user creation",
+        "name": "John Doe",
+        "email": "john@example.com",
+        "password": "SecurePass@123"
+      }
+    ],
+    "invalid": [
+      {
+        "scenario": "empty name returns 400",
+        "name": "",
+        "email": "john.doe@example.com",
+        "password": "SecurePass@123",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "empty email returns 400",
+        "name": "John Doe",
+        "email": "",
+        "password": "SecurePass@123",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "empty password returns 400",
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "password": "",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "malformed email returns 400",
+        "name": "John Doe",
+        "email": "not-an-email",
+        "password": "SecurePass@123",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "non-existent email login returns 401",
+        "name": "Ghost User",
+        "email": "ghost@nowhere.com",
+        "password": "SomePass@123",
+        "expectedError": "401"
+      }
+    ]
+  }
+}

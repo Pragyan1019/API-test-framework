@@ -3,7 +3,11 @@ import { test as baseTest } from "@playwright/test";
 import { BaseAPI } from "../api/base.api";
 import { OrderAPI } from "../api/orders.api";
 import { UserAPI } from "../api/users.api";
+import dotenv from "dotenv";
 
+dotenv.config();
+const email = process.env.TEST_USER_EMAIL;
+const password = process.env.TEST_USER_PASSWORD
 
 type ApiFixtures = {
   orderAPI: OrderAPI;
@@ -20,13 +24,12 @@ export const test = baseTest.extend<ApiFixtures>({
       "https://practice.expandtesting.com/notes/api/users/login",
       {
         data: {
-          email: "",
+          email: email ,
           name: "mnopqrst",
-          password: "",
+          password: password,
         },
       }
     );
-
     const body = await res.json();
 
     if (!res.ok()) {
@@ -34,7 +37,6 @@ export const test = baseTest.extend<ApiFixtures>({
         `Login failed [${res.status()}]: ${JSON.stringify(body)}`
       );
     }
-    console.log("Received auth token:", body.data.token); // Debug log for token
     await use(body.data.token);
   },
 
