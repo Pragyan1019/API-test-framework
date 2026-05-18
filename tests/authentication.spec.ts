@@ -8,20 +8,26 @@ dotenv.config();
 test.describe('Authentication',()=>{
     Auth_Data.valid.forEach(({scenario,name,email,password}:UserPayload)=>{
         test(`Valid-${scenario}`,async({userAPI})=>{
-            const createUser= await userAPI.create({
+            try{const createUser= await userAPI.create({
                 email:email,
                 name:name,
                 password:password
             })
-            expect(createUser).toBeDefined();
+            const loginuser= await userAPI.login({
+                email:email,
+                password:password
+            })
+            expect(loginuser).toBeDefined();
+        }catch(error){
+            throw new Error(`${error}`)
+        }
         })
     })
     Auth_Data.invalid.forEach(({scenario,name,email,password,expectedError}:UserPayload)=>{
         test(`Invalid-${scenario}`,async({userAPI})=>{
             try {   
-                await userAPI.create({
+                await userAPI.login({
                     email:email,
-                    name:name,
                     password:password
                 })
             } catch (error:any) {

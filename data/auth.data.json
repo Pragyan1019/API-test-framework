@@ -10,13 +10,6 @@
     ],
     "invalid": [
       {
-        "scenario": "empty name returns 400",
-        "name": "",
-        "email": "john.doe@example.com",
-        "password": "SecurePass@123",
-        "expectedError": "400"
-      },
-      {
         "scenario": "empty email returns 400",
         "name": "John Doe",
         "email": "",

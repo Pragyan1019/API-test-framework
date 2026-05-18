@@ -13,7 +13,6 @@ export class UserAPI extends BaseAPI {
 
   async create(
     payload: Omit<User, "id" | "createdAt">,
-    token?: string
   ): Promise<User> {
     // POST /users/register — no trailing 's' on register
     const body = await this.post<{ data: User }>(
@@ -21,6 +20,13 @@ export class UserAPI extends BaseAPI {
       payload as Record<string,string>,
     );
     return body.data;
+  }
+  async login(payload: Omit<User,"id"|"createdAt"|"name">):Promise<User>{
+    const body = await this.post<{data:User}>(
+      "/users/login",
+      payload as Record<string,string>
+    )
+    return body.data
   }
 
   async getById( token: string): Promise<User> {

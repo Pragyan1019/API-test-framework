@@ -1,0 +1,116 @@
+{
+  "createUser": {
+    "valid": [
+      {
+        "scenario": "create user with valid payload returns 201",
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "password": "SecurePass123"
+      }
+    ],
+    "invalid": [
+      {
+        "scenario": "create user with duplicate email returns 409",
+        "name": "John Duplicate",
+        "email": "john.doe@example.com",
+        "password": "SecurePass123",
+        "expectedError": "409"
+      },
+      {
+        "scenario": "create user with missing name returns 400",
+        "name": "",
+        "email": "missing.name@example.com",
+        "password": "SecurePass123",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "create user with name too short returns 400",
+        "name": "Sam",
+        "email": "short.name@example.com",
+        "password": "SecurePass123",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "create user with name too long returns 400",
+        "name": "ThisUserNameIsDefinitelyMoreThanThirtyCharacters",
+        "email": "long.name@example.com",
+        "password": "SecurePass123",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "create user with missing password returns 400",
+        "name": "No Password",
+        "email": "nopassword@example.com",
+        "password": "",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "create user with password too short returns 400",
+        "name": "Weak Password",
+        "email": "weakpass@example.com",
+        "password": "12345",
+        "expectedError": "400"
+      },
+      {
+        "scenario": "create user with invalid email format returns 400",
+        "name": "Invalid Email",
+        "email": "invalid-email-format",
+        "password": "SecurePass123",
+        "expectedError": "400"
+      }
+    ]
+  },
+  "getUser": {
+    "valid": [
+      {
+        "scenario": "get user by valid id returns correct user",
+        "token": "valid-auth-token",
+        "userId": "64f1a2b3c4d5e6f789123456"
+      }
+    ],
+    "invalid": [
+      {
+        "scenario": "get user without token returns 401",
+        "token": "",
+        "userId": "64f1a2b3c4d5e6f789123456",
+        "expectedError": "401"
+      }
+    ]
+  },
+  "updateUser": {
+    "valid": [
+      {
+        "scenario": "update user name succeeds",
+        "token": "valid-auth-token",
+        "name": "Updated John",
+        "phoneNumber": "9812345678",
+        "companyName": "OpenAI Nepal"
+      }
+    ],
+    "invalid": [
+      {
+        "scenario": "update user with invalid token returns 401",
+        "token": "invalid-auth-token",
+        "name": "Updated John",
+        "phoneNumber": "9812345678",
+        "companyName": "OpenAI Nepal",
+        "expectedError": "401"
+      }
+    ]
+  },
+  "deleteUser": {
+    "valid": [
+      {
+        "scenario": "delete user removes account",
+        "token": "valid-auth-token"
+      }
+    ],
+    "invalid": [
+      {
+        "scenario": "delete user twice returns 404",
+        "token": "deleted-user-token",
+        "expectedError": "404"
+      }
+    ]
+  }
+}

@@ -44,11 +44,12 @@ export class BaseAPI {
     return res.json();
   }
 
-  async patch<T>(path: string, body: unknown, token: string): Promise<T> {
+  async patch<T>(path: string, body: Record<string,string>, token: string): Promise<T> {
     const res = await this.request.patch(`${this.baseURL}${path}`, {
-      data: body,
+      form: body,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "accept": "application/json",
         ...this.authHeader(token),
       },
     });

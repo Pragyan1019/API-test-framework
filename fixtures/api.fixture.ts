@@ -4,6 +4,7 @@ import { BaseAPI } from "../api/base.api";
 import { OrderAPI } from "../api/orders.api";
 import { UserAPI } from "../api/users.api";
 import dotenv from "dotenv";
+import { access } from "node:fs";
 
 dotenv.config();
 const email = process.env.TEST_USER_EMAIL;
@@ -38,6 +39,12 @@ export const test = baseTest.extend<ApiFixtures>({
       );
     }
     await use(body.data.token);
+    await request.delete("https://practice.expandtesting.com/notes/api/users/logout",{
+      headers:{
+        "accept":"application/json",
+        "x-auth-token":body.data.token,
+      }
+    })
   },
 
   userAPI: async ({ request }, use) => {
