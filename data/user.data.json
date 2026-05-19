@@ -82,7 +82,9 @@
       {
         "scenario": "update user name succeeds",
         "token": "valid-auth-token",
-        "name": "Updated John",
+        "name": "Joe don",
+        "email": "joebhaiiiijana@example.com",
+        "password": "SecurePass123",
         "phoneNumber": "9812345678",
         "companyName": "OpenAI Nepal"
       }
@@ -90,9 +92,11 @@
     "invalid": [
       {
         "scenario": "update user with invalid token returns 401",
-        "token": "invalid-auth-token",
-        "name": "Updated John",
-        "phoneNumber": "9812345678",
+        "token": "abcdefghijklmnopqrstuvwxyz4367864381",
+        "name": "Loe loe",
+        "email": "loe@example.com",
+        "password": "SecurePass123",
+        "phoneNumber": "9864729101",
         "companyName": "OpenAI Nepal",
         "expectedError": "401"
       }
@@ -101,15 +105,19 @@
   "deleteUser": {
     "valid": [
       {
-        "scenario": "delete user removes account",
-        "token": "valid-auth-token"
+        "name": "ramesh puri",
+        "email": "hellorajabhaiyaa@example.com",
+        "password": "dhakalji2342",        
+        "scenario": "delete user removes account"
       }
     ],
     "invalid": [
       {
         "scenario": "delete user twice returns 404",
-        "token": "deleted-user-token",
-        "expectedError": "404"
+        "name": "Ram dahal",
+        "email": "rajajjiiiafjadlka@example.com",
+        "password": "dakalji749838",  
+        "expectedError": "401"
       }
     ]
   }

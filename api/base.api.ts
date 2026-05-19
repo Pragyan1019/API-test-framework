@@ -20,13 +20,17 @@ export class BaseAPI {
           ...this.authHeader(token),
         },
     });
-    if (!res.ok()) throw new Error(`GET ${path} failed [${res.status()}]`);
-    return res.json();
+    if (!res.ok()) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(
+        `POST ${path} failed [${res.status()}]: ${JSON.stringify(err)}`,
+      );
+    }    return res.json();
   }
   
 
   async post<T>(path: string,body:Record<string,string> , token?: string): Promise<T> {
-    const res = await this.request.post(`https://practice.expandtesting.com/notes/api/users/register`, {
+    const res = await this.request.post(`https://practice.expandtesting.com/notes/api${path}`, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "accept": "application/json",
@@ -64,8 +68,10 @@ export class BaseAPI {
 
   async delete(path: string, token?: string): Promise<void> {
     const res = await this.request.delete(`${this.baseURL}${path}`, {
-      headers: this.authHeader(token),
-    });
+      headers: {
+        "accept": "application/json",
+        ...this.authHeader(token),
+      }    });
     if (!res.ok()) throw new Error(`DELETE ${path} failed [${res.status()}]`);
   }
 }

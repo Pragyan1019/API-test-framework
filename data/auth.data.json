@@ -32,7 +32,7 @@
       },
       {
         "scenario": "non-existent email login returns 401",
-        "name": "Ghost User",
+        "name": "Johnn bhai",
         "email": "ghost@nowhere.com",
         "password": "SomePass@123",
         "expectedError": "401"

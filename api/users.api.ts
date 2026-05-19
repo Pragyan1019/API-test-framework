@@ -7,22 +7,24 @@ export interface User {
   email?: string;
   password?: string;
   createdAt: string;
+  companyName?:string;
+  phoneNumber?:string;
 }
 
 export class UserAPI extends BaseAPI {
 
   async create(
     payload: Omit<User, "id" | "createdAt">,
-  ): Promise<User> {
+  ) {
     // POST /users/register — no trailing 's' on register
-    const body = await this.post<{ data: User }>(
+    const body = await this.post<{ data: any }>(
       "/users/register",
       payload as Record<string,string>,
     );
     return body.data;
   }
-  async login(payload: Omit<User,"id"|"createdAt"|"name">):Promise<User>{
-    const body = await this.post<{data:User}>(
+  async login(payload: Omit<User,"id"|"createdAt"|"name"|"companyName"|"phoneNumber">){
+    const body = await this.post<{data:any}>(
       "/users/login",
       payload as Record<string,string>
     )
@@ -40,13 +42,12 @@ export class UserAPI extends BaseAPI {
   }
 
   async update(
-    id: string,
     payload: Partial<User>,
     token: string
   ): Promise<User> {
     // Moved to base.api patch() — was passing string literal 'payload' before
     const body = await this.patch<{ data: User }>(
-      `/users/${id}`,
+      `/users/profile`,
       payload,  // was the string "payload" — now the actual variable
       token
     );
@@ -55,6 +56,6 @@ export class UserAPI extends BaseAPI {
 
   async deleteMe(token: string): Promise<void> {
     // This API deletes by token identity — endpoint is /users/me, no ID
-    return super.delete("/users/me", token);
+    return super.delete("/users/delete-account", token);
   }
 }
